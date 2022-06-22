@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils.text import slugify
 
 from store.utils import custom_slugify
@@ -24,6 +25,14 @@ class Category(models.Model):
         if not self.slug:
             self.slug = slugify(custom_slugify(str(self.name)))
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse_lazy(
+            'store:list_products_by_category',
+            kwargs={
+                'category_slug': self.slug,
+            }
+        )
 
     def __str__(self):
         return self.name
@@ -55,11 +64,13 @@ class Product(models.Model):
         blank=True
     )
     available = models.BooleanField(
-        default=True
+        default=True,
+        verbose_name='В наличии'
     )
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2
+        decimal_places=2,
+        verbose_name='Цена'
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -82,6 +93,15 @@ class Product(models.Model):
         if not self.slug:
             self.slug = slugify(custom_slugify(str(self.name)))
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse_lazy(
+            'store:detail_product',
+            kwargs={
+                'pk': self.pk,
+                'slug': self.slug,
+            }
+        )
 
     def __str__(self):
         return self.name

@@ -1,0 +1,24 @@
+{% load static %}
+<div id="sidebar">
+    <h3>
+        Категории
+    </h3>
+    <ul>
+        <li {% if not category %}
+            class="selected"
+            {% endif %}>
+            <a href="{% url 'store:list_products' %}">
+                Все товары
+            </a>
+        </li>
+        {% for c in categories %}
+        <li {% if c.pk == category.pk %}
+            class="selected"
+            {% endif %}>
+            <a href="{% url 'store:list_products_by_category' category_slug=c.slug %}">
+                {{ c.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

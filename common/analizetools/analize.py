@@ -1,12 +1,13 @@
 from pprint import pprint
 import sys
 import builtins
+from collections.abc import Mapping
 
 
 # # for import
 # from analizetools.analize import (
 #     p_dir, p_mro, p_glob, p_loc, p_type,
-#     delimetr, p_content, show_builtins,
+#     delimiter, p_content, show_builtins,
 #     show_doc, console, console_compose,
 # )
 
@@ -66,10 +67,13 @@ def p_type(obj):
 # потом можно улучшить чтобы передавался также **kwargs, и тогда выводился
 # также имя переменной и её значенте
 # поможет setattr
-def console(*args, delimetr='- ', length=50):
+def console(*args, delimetr='- ', length=50, sdict=False):
     print('\n', '=' * 100)
     for elem in args:
-        pprint(elem)
+        if issubclass(type(elem), Mapping) or sdict:
+            pprint(dict(elem))
+        else:
+            pprint(elem)
         print(delimetr * length)
     print('=' * 100, '\n')
 
@@ -84,16 +88,17 @@ def console_compose(
         end=delimiter
 ):
     params = (
-        (stype, p_type,),
-        (smro, p_mro,),
-        (sdir, p_dir,),
+        (stype, p_type, 'type:\n'),
+        (smro, p_mro, 'mro:\n'),
+        (sdir, p_dir, 'dir:\n'),
 
     )
-    for action, func in params:
+    for action, func, view in params:
         if action:
-            if params.index((action, func,)) == 0:
+            if params.index((action, func, view)) == 0:
                 start()
             else:
                 delimiter()
+            print(view)
             func(obj)
     end()

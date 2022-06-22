@@ -39,9 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
+    'cart.apps.CartConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -102,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'  # 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -113,7 +116,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-# -------------------------------------------------------- static settings
+# -------------------------------------------------------- STATIC
 
 STATIC_URL = '/static/'
 
@@ -124,9 +127,22 @@ STATICFILES_DIRS = [
 
 # здесь мы указываем куда django будет собирать всю статику проекта при команде collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# -------------------------------------------------------- static settings
+
+# -------------------------------------------------------- MEDIA
+
+# базовый url от которого будет формироваться адреса файлов.
+MEDIA_URL = '/media/'
+
+# путь в файловой системе, где эти файлы будут храниться
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --------------------------------------- django-debug-toolbar
+INTERNAL_IPS = ('127.0.0.1',)
+
+# для корзины, сохранённой в сессиях
+CART_SESSION_ID = 'cart'

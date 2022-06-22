@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Товары {% if category %}
+по категории "{{ category }}"
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- main -->
+{% include 'store/product/_inc/main.html' %}
+
+<!-- sidebar -->
+{% include 'store/product/_inc/sidebar.html' %}
+
+{% endblock %}
