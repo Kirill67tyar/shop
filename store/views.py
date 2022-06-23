@@ -1,8 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse
 
 from store.utils import get_object_or_null
 from store.models import Product, Category
 
+from cart.forms import AddToCartForm
 from common.analizetools.analize import (
     p_dir, p_mro, p_glob, p_loc, p_type,
     delimiter, p_content, show_builtins,
@@ -13,7 +15,6 @@ from common.analizetools.analize import (
 def list_product_view(request, category_slug=None):
     categories = Category.objects.all()
     category = None
-
     products = Product.objects.filter(available=True)
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -24,13 +25,6 @@ def list_product_view(request, category_slug=None):
         'products': products,
     }
 
-    # --- console ---
-    # console(request.headers)
-    # p_dir(request)
-    console(request.session, sdict=True)
-    console_compose(request.session)
-    # --- console ---
-
     return render(
         request=request,
         template_name='store/product/list.html',
@@ -40,10 +34,26 @@ def list_product_view(request, category_slug=None):
 
 def detail_product_view(request, pk, slug):
     product = get_object_or_404(Product, pk=pk, slug=slug)
+    cart_form = AddToCartForm()
     return render(
         request=request,
         template_name='store/product/detail.html',
         context={
             'product': product,
+            'cart_form': cart_form,
         }
     )
+
+
+def experiment_view(request):
+    response = HttpResponse()
+    # --- console ---
+    console(response.headers)
+    # console(request.headers)
+    # p_dir(request)
+    # console(request.session, sdict=True)
+    # console(request.COOKIES)
+    # console_compose(request.session)
+
+    # --- console ---
+    return JsonResponse({'status': 'ok', })

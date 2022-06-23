@@ -1,8 +1,17 @@
+{% load static %}
 <div id="header">
-    <a href="/" class="logo">Магазин приятного застолья</a>
+    <a href="/" class="logo">
+        <i class="fa fa-coffee fa-2x" aria-hidden="true"></i> &nbsp;&nbsp;
+        Магазин приятного застолья</a>
+<!--    https://editor.freelogodesign.org/en/logo/edit/67aef9e67e4540cd9c34081fb7aee5f3?template=53196&category=19 -->
 </div>
 <div id="subheader">
+<!--    <img src="{# static 'img/logo.png' #}">-->
+
     <div class="cart">
-        Ваша корзина пуста
+        <a href="{% url 'cart:detail_cart' %}">
+            <i class="fa fa-shopping-basket fa-2x" aria-hidden="true"></i>
+            <strong>({{ cart|length }})</strong>
+        </a>
     </div>
 </div>

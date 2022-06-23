@@ -20,6 +20,20 @@
     <p class="price">
         $ {{ product.price }}
     </p>
+    <form action="{% url 'cart:add_to_cart' product_id=product.pk %}" method="POST">
+        {% csrf_token %}
+        {% for field in cart_form %}
+
+        {{ field.errors }}
+        {{ field }} &nbsp;
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+
+
+        {% endfor %}
+        <input type="submit" value="Добавить в корзину">
+    </form>
     {{ product.description|linebreaks }}
 </div>
 {% endblock %}

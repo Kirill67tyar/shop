@@ -70,7 +70,7 @@ def p_type(obj):
 def console(*args, delimetr='- ', length=50, sdict=False):
     print('\n', '=' * 100)
     for elem in args:
-        if issubclass(type(elem), Mapping) or sdict:
+        if issubclass(type(elem), (Mapping, dict)) or sdict:
             pprint(dict(elem))
         else:
             pprint(elem)
