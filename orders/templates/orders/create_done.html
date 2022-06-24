@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказ оформлен{% endblock %}
+
+{% block content %}
+<h1>Поздравляем</h1>
+<p>Заказ успешно оформлен. Номер вашего заказа
+    <strong>
+        {{ order.pk }}
+    </strong>
+</p>
+<a href="{% url 'store:list_products' %}" class="button-light">
+        Вернуться к покупкам
+    </a>&nbsp;
+{% endblock %}

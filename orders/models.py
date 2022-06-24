@@ -60,7 +60,7 @@ class OrderItem(models.Model):
         to='store.Product',
         on_delete=models.CASCADE,
         related_name='order_items',
-        verbose_name='Заказ'
+        verbose_name='Продукт'
     )
     quantity = models.PositiveIntegerField(
         default=1,

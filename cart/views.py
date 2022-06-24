@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import (
     render,
     redirect,
@@ -66,8 +66,9 @@ def experiment(request):
 
     # --- console ---
     console(request.COOKIES)
-    console(request.session, sdict=True)
-    console(request.headers)
+    # console(request.META)
+    # p_dir(request)
+    # console(HttpResponse().headers)
     # --- console ---
 
     return JsonResponse({'status': 'ok'})
