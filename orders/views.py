@@ -6,6 +6,7 @@ from django.shortcuts import (
 )
 
 from cart.carts import Cart
+from orders.tasks import order_created
 from orders.models import OrderItem, Order
 from orders.forms import CreateOrderModelForm
 
@@ -24,6 +25,7 @@ def create_order_view(request):
                     price=item['price'],
                 )
             cart.clear()
+            order_created.delay(order.pk)
             return redirect(reverse(
                 'orders:create_order_done',
                 kwargs={

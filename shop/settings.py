@@ -148,3 +148,5 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 # для корзины, сохранённой в сессиях
 CART_SESSION_ID = 'cart'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
