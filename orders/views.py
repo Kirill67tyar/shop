@@ -26,11 +26,10 @@ def create_order_view(request):
                 )
             cart.clear()
             order_created.delay(order.pk)
+            request.session['order_id'] = order.pk
+            # request.session.modified = True
             return redirect(reverse(
-                'orders:create_order_done',
-                kwargs={
-                    'order_id': order.pk,
-                }
+                'payment:process'
             ))
     else:
         form = CreateOrderModelForm()

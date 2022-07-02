@@ -35,6 +35,11 @@ class Order(models.Model):
         default=False,
         verbose_name='Уплачено'
     )
+    braintree_id = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name='ID чека'
+    )
 
     class Meta:
         ordering = ('-created', '-updated')
