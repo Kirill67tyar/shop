@@ -7,6 +7,11 @@ from django.shortcuts import (
 )
 
 from orders.models import Order
+from common.analizetools.analize import (
+    p_dir, p_mro, p_glob, p_loc, p_type,
+    delimiter, p_content, show_builtins,
+    show_doc, console, console_compose,
+)
 
 
 def process_payment_view(request):
@@ -20,16 +25,28 @@ def process_payment_view(request):
         nonce = request.POST.get('payment_method_nonce')
 
         # создание и отпрака транзакции (идентификатор платежной транзакции)
+        # причём передача в метод sale делает скорее всего HTTP запрос
+        # т.е. строка ниже делает HTTP запрос, совершает снятие денег со счёта
         result = braintree.Transaction.sale({
-            'amount': '{:.2f}'.format(order.get_total_cost()),  # - общая сумма заказа
+            'amount': '{:.2f}'.format(order.get_total_cost),  # - общая сумма заказа
             'payment_method_nonce': nonce,  # - token для платежной транзакции
             'options': {  # options - Дополнительные параметры
                 'submit_for_settlement': True,  # - транзакция будет обрабатываться автоматически
             },
         })
-        if result.is_success():
+        # если снятие со счёта прошло успешно (is_success)
+        if result.is_success:
             order.paid = True
             order.braintree_id = result.transaction.id
+
+            # --- console ---
+            console(
+                request.session,
+                request.COOKIES,
+                request.headers,
+            )
+            # --- console ---
+
             order.save()
             return redirect(to='payment:done')
         else:

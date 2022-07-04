@@ -9,6 +9,11 @@ from cart.carts import Cart
 from orders.tasks import order_created
 from orders.models import OrderItem, Order
 from orders.forms import CreateOrderModelForm
+from common.analizetools.analize import (
+    p_dir, p_mro, p_glob, p_loc, p_type,
+    delimiter, p_content, show_builtins,
+    show_doc, console, console_compose,
+)
 
 
 def create_order_view(request):
@@ -24,10 +29,19 @@ def create_order_view(request):
                     quantity=item['quantity'],
                     price=item['price'],
                 )
-            cart.clear()
+            # cart.clear()
             order_created.delay(order.pk)
             request.session['order_id'] = order.pk
             # request.session.modified = True
+
+            # --- console ---
+            console(
+                request.session.items(),
+                request.COOKIES,
+                request.headers
+            )
+            # --- console ---
+            cart.clear()
             return redirect(reverse(
                 'payment:process'
             ))

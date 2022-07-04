@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Заказ оформлен{% endblock %}
+
+{% block content %}
+<h1>Ваш платёж прошёл успешно</h1>
+<a href="#">Получить чек PDF</a>
+{% endblock %}
