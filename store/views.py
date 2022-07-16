@@ -61,6 +61,7 @@ def experiment_view(request):
     # console(request.session, sdict=True)
     # console(request.COOKIES)
     # console_compose(request.session)
+    console(request.get_full_path_info().split('/'))
 
     # --- console ---
     return JsonResponse({'status': 'ok', })

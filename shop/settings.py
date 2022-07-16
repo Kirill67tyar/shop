@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'debug_toolbar',
+    'wkhtmltopdf',
 ]
 
 MIDDLEWARE = [

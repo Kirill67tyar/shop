@@ -3,6 +3,8 @@ import datetime
 
 from django.contrib import admin
 from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
 
 from orders.models import Order, OrderItem
 
@@ -68,6 +70,19 @@ export_to_csv.short_description = 'Экспортировать в файл CSV'
 # -------- export to csv ---------
 
 
+def order_detail(obj):
+    url = reverse_lazy('orders:admin_order_detail', args=[obj.pk, ])
+    return mark_safe(f'<a href={url}>View</a>')
+
+
+def order_pdf(obj):
+    url = reverse_lazy('orders:admin_order_pdf', args=[obj.pk, ])
+    return mark_safe(f'<a href={url}>PDF</a>')
+
+
+order_pdf.short_description = 'Счёт'
+
+
 class OrderItemTabularInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = 'product',
@@ -76,9 +91,9 @@ class OrderItemTabularInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'pk', 'first_name', 'last_name',
-        'email', 'postal_code', 'city',
-        'address', 'created', 'updated', 'paid',
+        'pk', 'first_name', 'email', 'city',
+        'created', 'updated', 'paid',
+        order_detail, order_pdf,
     )
     list_filter = ('paid', 'created', 'updated',)
     inlines = (OrderItemTabularInline,)
