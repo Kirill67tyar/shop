@@ -4,6 +4,7 @@ from django.shortcuts import (
     get_object_or_404,
     redirect,
 )
+from django.contrib.admin.views.decorators import staff_member_required
 
 from cart.carts import Cart
 from orders.tasks import order_created
@@ -14,6 +15,21 @@ from common.analizetools.analize import (
     delimiter, p_content, show_builtins,
     show_doc, console, console_compose,
 )
+
+
+@staff_member_required
+def admin_order_detail_view(request, order_id):
+    order = get_object_or_404(
+        klass=Order,
+        pk=order_id
+    )
+    return render(
+        request=request,
+        template_name='for_admin/orders/order/detail.html',
+        context={
+            'order': order,
+        }
+    )
 
 
 def create_order_view(request):

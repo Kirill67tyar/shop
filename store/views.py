@@ -25,6 +25,13 @@ def list_product_view(request, category_slug=None):
         'products': products,
     }
 
+    # --- console ---
+    console_compose(
+        request,
+        sdir=False
+    )
+    # --- console ---
+
     return render(
         request=request,
         template_name='store/product/list.html',

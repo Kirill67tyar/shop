@@ -49,9 +49,13 @@ class Order(models.Model):
     def __str__(self):
         return f'Заказ: {self.pk} | Дата: {self.created} | Заказчик: {self.email}'
 
+    # @property
+    # def get_total_cost(self):
+    #     return sum(item.get_cost for item in self.items.all())
+
     @property
     def get_total_cost(self):
-        return sum(item.get_cost for item in self.items.all())
+        return sum(item['price'] * item['quantity'] for item in self.items.values('price', 'quantity'))
 
 
 class OrderItem(models.Model):

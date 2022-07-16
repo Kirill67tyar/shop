@@ -25,7 +25,7 @@
 <!--Подключаем компонент Hosted Fields (загружаем Hosted Fields компоненты для формирования полей)-->
 <script src="https://js.braintreegateway.com/web/3.29.0/js/hosted-fields.min.js"></script>
 <!--ниже код javascript, с использованием библиотек, подклюенных выше (SDK Braintree)
-Что он делает? Он получает token из контроллера payment_process_view (python) при GET запросе
+Что он делает? Он получает token из контроллера payment_process_view (python) при GET запросе,
 формирует поля где у div id card-number, cvv, expiration-date (если токен валидный)
 также, когда мы делаем post запрос этот код успевает сформировать защищенный токен
 для транзакции и послать его с полем payment_method_nonce в post запросе
