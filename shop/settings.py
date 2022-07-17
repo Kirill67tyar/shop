@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+import pdfkit
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
+    'coupons.apps.CouponsConfig',
     'debug_toolbar',
     'wkhtmltopdf',
 ]
@@ -151,8 +153,6 @@ INTERNAL_IPS = ('127.0.0.1',)
 # для корзины, сохранённой в сессиях
 CART_SESSION_ID = 'cart'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # -------------------------------------------------------- BRAINTREE settings
 # docs:
 # https://github.com/Kirill67tyar/braintree_python
@@ -199,3 +199,18 @@ braintree.Configuration.configure(
 # CVV - 123
 # date - 12/24
 # -------------------------------------------------------- BRAINTREE settings
+
+
+# -------------------------------------------------------- WKHTMLTOPDF settings
+WKHTMLTOPDF = os.getenv('WKHTMLTOPDF')
+WKHTMLTOPDF_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF)
+# -------------------------------------------------------- WKHTMLTOPDF settings
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#                           или
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

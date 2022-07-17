@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from store.models import Product
 from cart.carts import Cart
 from cart.forms import AddToCartForm
+from coupons.forms import CouponApplyForm
 
 from common.analizetools.analize import (
     p_dir, p_mro, p_glob, p_loc, p_type,
@@ -54,10 +55,21 @@ def detail_cart_view(request):
                 'update': True,
             }
         )
+    if cart.coupon:
+        coupon_apply_form = CouponApplyForm(
+            initial={
+                'code': cart.coupon.code,
+            }
+        )
+    else:
+        coupon_apply_form = CouponApplyForm()
     return render(
         request=request,
         template_name='cart/detail.html',
-        context={'cart': cart, }
+        context={
+            'cart': cart,
+            'coupon_apply_form': coupon_apply_form,
+        }
     )
 
 

@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.http import JsonResponse
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404, HttpResponse
 
 from store.utils import get_object_or_null
@@ -53,15 +55,22 @@ def detail_product_view(request, pk, slug):
 
 
 def experiment_view(request):
+    msg = EmailMultiAlternatives(
+        subject='проверка',
+        body='ПРОВЕРКА',
+        from_email=settings.EMAIL_HOST_USER,
+        to=['kirillbogomolov.ric@gmail.com', ]
+    )
+    msg.send()
     response = HttpResponse()
     # --- console ---
-    console(response.headers)
-    # console(request.headers)
-    # p_dir(request)
-    # console(request.session, sdict=True)
-    # console(request.COOKIES)
-    # console_compose(request.session)
-    console(request.get_full_path_info().split('/'))
+    # console(response.headers)
+    # # console(request.headers)
+    # # p_dir(request)
+    # # console(request.session, sdict=True)
+    # # console(request.COOKIES)
+    # # console_compose(request.session)
+    # console(request.get_full_path_info().split('/'))
 
     # --- console ---
     return JsonResponse({'status': 'ok', })

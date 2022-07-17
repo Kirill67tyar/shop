@@ -24,13 +24,6 @@ def export_to_csv(modeladmin, request, queryset):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment;filename={opts.verbose_name}.csv'
 
-    # --- console ---
-    delimiter(sym=' + ')
-    print(response)
-    delimiter(sym=' + ')
-    console_compose(response)
-    # --- console ---
-
     # создаём объект для записи csv
     writer = csv.writer(response)
     # делаем заголовки

@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.conf import settings
 
 from store.models import Product
+from coupons.models import Coupon
+from common.utils import get_object_or_null
 
 
 class Cart:
@@ -11,6 +13,8 @@ class Cart:
     def __init__(self, request):
         self.session = request.session
         self.cart = self.session.setdefault(settings.CART_SESSION_ID, {})
+        self.coupon_id = self.session.get('coupon_id')
+        self.coupon_obj = None
 
     def __iter__(self):
         cart = self.cart.copy()
@@ -70,4 +74,22 @@ class Cart:
     def clear(self):
         if settings.CART_SESSION_ID in self.session:
             del self.session[settings.CART_SESSION_ID]
-            self.save()
+        if self.session.get('coupon_id'):
+            del self.session['coupon_id']
+        self.save()
+
+    @property
+    def coupon(self):
+        if self.coupon_id and not self.coupon_obj:
+            self.coupon_obj = get_object_or_null(Coupon, pk=self.coupon_id)
+        return self.coupon_obj
+
+    def get_discount(self):
+        if self.coupon:
+            return self.coupon_obj.discount / Decimal('100') * self.get_full_price()
+            # return self.get_full_price() / Decimal('100') * self.coupon.discount
+        else:
+            return Decimal('0')
+
+    def get_full_price_after_discount(self):
+        return self.get_full_price() - self.get_discount()

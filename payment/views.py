@@ -1,10 +1,15 @@
+import pdfkit
 import braintree
+from io import BytesIO
 
+from django.conf import settings
+from django.core.mail import EmailMessage
 from django.shortcuts import (
     render,
     redirect,
     get_object_or_404,
 )
+from django.template.loader import render_to_string
 
 from orders.models import Order
 from common.analizetools.analize import (
@@ -48,6 +53,44 @@ def process_payment_view(request):
             # --- console ---
 
             order.save()
+
+            # --- отправка по почте ---
+            output = BytesIO()
+            subject = f'Магазин приятного застолья, Номер заказа - {order.pk}'
+            message = f'Прилагается PDF файл'
+
+            # создаём объект сообщения
+            email = EmailMessage(
+                subject=subject,
+                body=message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[order.email, ]
+            )
+
+            # формируем шаблон html для pdf файла
+            html_string = render_to_string(
+                template_name='payment/to_pdf.html',
+                context={
+                    'order': order,
+                }
+            )
+
+            # преобразовываем в стринг и записываем в BytesIO()
+            content = pdfkit.from_string(
+                input=html_string,
+                output_path=False,
+                css='static/css/pdf.css',
+                configuration=settings.WKHTMLTOPDF_CONFIG
+            )
+            output.write(content)
+
+            # прикрепляем файл к объекту сообщения
+            email.attach(
+                filename=f'order_{order.pk}.pdf',
+                content=output.getvalue(),
+                mimetype='application/pdf'
+            )
+            email.send()  # посылаем email сообщение по smtp серверу
             return redirect(to='payment:done')
         else:
             return redirect(to='payment:canceled')
@@ -65,10 +108,17 @@ def process_payment_view(request):
 
 
 def done_payment_view(request):
+    order_id = request.session.get('order_id')
+    order = get_object_or_404(
+        klass=Order,
+        pk=order_id
+    )
     return render(
         request=request,
         template_name='payment/done.html',
-        context={}
+        context={
+            'order': order,
+        }
     )
 
 

@@ -123,7 +123,7 @@ ul.errorlist {
 }
 
 #subheader {
-    background:#ececec;
+    background:#e3c974; /* #ececec #e3c974 */
     color:#444;
     padding:15px 100px;
     overflow:auto;
@@ -228,7 +228,7 @@ ul.errorlist {
 .order-info {
     float:right;
     width:300px;
-    background:#efefef;
+    background:#efefef; /* #efefef #e3c974 */
     padding:10px 20px;
     color:#333;
     border-bottom:4px solid #5993bb;

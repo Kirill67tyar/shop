@@ -1,4 +1,7 @@
+from decimal import Decimal
+
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Order(models.Model):
@@ -40,6 +43,22 @@ class Order(models.Model):
         blank=True,
         verbose_name='ID чека'
     )
+    coupon = models.ForeignKey(
+        to='coupons.Coupon',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='orders',
+        verbose_name='Купон'
+    )
+    discount = models.IntegerField(
+        default=0,
+        validators=(
+            MinValueValidator(0),
+            MaxValueValidator(100),
+        ),
+        verbose_name='Скидка'
+    )
 
     class Meta:
         ordering = ('-created', '-updated')
@@ -55,6 +74,11 @@ class Order(models.Model):
 
     @property
     def get_total_cost(self):
+        total_cost = sum(item['price'] * item['quantity'] for item in self.items.values('price', 'quantity'))
+        return total_cost - total_cost * (self.discount / Decimal('100'))
+
+    @property
+    def get_total_cost_without_discount(self):
         return sum(item['price'] * item['quantity'] for item in self.items.values('price', 'quantity'))
 
 
