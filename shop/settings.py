@@ -206,6 +206,8 @@ WKHTMLTOPDF = os.getenv('WKHTMLTOPDF')
 WKHTMLTOPDF_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF)
 # -------------------------------------------------------- WKHTMLTOPDF settings
 
+
+# -------------------------------------------------------- SMTP settings
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #                           или
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -214,3 +216,8 @@ EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# --------------------------------------- Redis
+REDIS_HOST = 'localhost'  # 127.0.0.1  some_pro_host.ru
+REDIS_PORT = 6379
+REDIS_DB = 1

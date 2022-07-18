@@ -19,6 +19,7 @@ class Coupon(models.Model):
         validators=(
             MinValueValidator(1),  # валидация этих полей происзодит на уровне Django а не базы данных
             MaxValueValidator(100)
+            # причём сробатывать будут при валидации формы и в админке. в консоли можно создавать любое число
         ),
         verbose_name='Скидка'
     )

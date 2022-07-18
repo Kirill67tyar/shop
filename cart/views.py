@@ -7,6 +7,7 @@ from django.shortcuts import (
 from django.views.decorators.http import require_POST
 
 from store.models import Product
+from store.recommenders import Recommender
 from cart.carts import Cart
 from cart.forms import AddToCartForm
 from coupons.forms import CouponApplyForm
@@ -48,6 +49,7 @@ def remove_from_cart_view(request, product_id):
 
 def detail_cart_view(request):
     cart = Cart(request=request)
+    products = []
     for item in cart:
         item['update_quantity_form'] = AddToCartForm(
             initial={
@@ -55,6 +57,7 @@ def detail_cart_view(request):
                 'update': True,
             }
         )
+        products.append(item['product'])  # для класса Recommender
     if cart.coupon:
         coupon_apply_form = CouponApplyForm(
             initial={
@@ -63,11 +66,14 @@ def detail_cart_view(request):
         )
     else:
         coupon_apply_form = CouponApplyForm()
+    r = Recommender()
+    recommendations = r.suggest_products_for(products, max_length=4)
     return render(
         request=request,
         template_name='cart/detail.html',
         context={
             'cart': cart,
+            'recommendations': recommendations,
             'coupon_apply_form': coupon_apply_form,
         }
     )

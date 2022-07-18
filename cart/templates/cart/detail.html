@@ -88,6 +88,12 @@
 
 </table>
 
+<!--рекомандации -->
+{% if recommendations %}
+{% include '_inc/recommendations.html' with cart_css='cart' %}
+{% endif %}
+
+<!-- купоны -->
 <p>Применить купон</p>
 <form action="{% url 'coupons:apply' %}" method="post">
     {% csrf_token %}

@@ -17,6 +17,7 @@ from cart.carts import Cart
 from orders.tasks import order_created
 from orders.models import OrderItem, Order
 from orders.forms import CreateOrderModelForm
+from store.recommenders import Recommender
 from common.analizetools.analize import (
     p_dir, p_mro, p_glob, p_loc, p_type,
     delimiter, p_content, show_builtins,
@@ -49,6 +50,7 @@ def create_order_view(request):
                 order.coupon = cart.coupon
                 order.discount = cart.coupon.discount
             order.save()
+            products = []
             for item in cart:
                 OrderItem.objects.create(
                     order=order,
@@ -56,6 +58,7 @@ def create_order_view(request):
                     quantity=item['quantity'],
                     price=item['price'],
                 )
+                products.append(item['product'])  # для класса Recommender
             # cart.clear()
             order_created.delay(order.pk)
             request.session['order_id'] = order.pk
@@ -68,6 +71,9 @@ def create_order_view(request):
                 request.headers
             )
             # --- console ---
+
+            r = Recommender()
+            r.products_bought(products)
             cart.clear()
             return redirect(reverse(
                 'payment:process'

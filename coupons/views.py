@@ -20,5 +20,6 @@ def coupon_apply_view(request):
             valid_to__gte=now,
             active=True,
         )
-        request.session['coupon_id'] = coupon.pk
+        if coupon:
+            request.session['coupon_id'] = coupon.pk
     return redirect('cart:detail_cart')

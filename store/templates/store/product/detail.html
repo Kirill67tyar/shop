@@ -35,5 +35,12 @@
         <input type="submit" value="Добавить в корзину">
     </form>
     {{ product.description|linebreaks }}
+
+
+    {% if recommendations %}
+    {% include '_inc/recommendations.html' %}
+    {% endif %}
+
+
 </div>
 {% endblock %}

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, get_object_or_404, HttpResponse
 
-from store.utils import get_object_or_null
+from store.recommenders import Recommender
 from store.models import Product, Category
 
 from cart.forms import AddToCartForm
@@ -44,12 +44,18 @@ def list_product_view(request, category_slug=None):
 def detail_product_view(request, pk, slug):
     product = get_object_or_404(Product, pk=pk, slug=slug)
     cart_form = AddToCartForm()
+    r = Recommender()
+    recommendations = r.suggest_products_for(
+        products=[product],
+        max_length=4
+    )
     return render(
         request=request,
         template_name='store/product/detail.html',
         context={
             'product': product,
             'cart_form': cart_form,
+            'recommendations': recommendations,
         }
     )
 
