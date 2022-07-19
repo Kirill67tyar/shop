@@ -77,7 +77,7 @@ class Recommender:
             redis_db.delete(tmp_key)  # удаляем временный ключ, который больше нам не нужен
 
         suggested_ids = [int(prd_id) for prd_id in suggested_ids]
-        suggested_products = list(Product.objects.filter(pk__in=suggested_ids))
+        suggested_products = list(Product.objects.filter(pk__in=suggested_ids).select_related('category'))
         suggested_products.sort(
             key=lambda elem: suggested_ids.index(elem.pk)
         )

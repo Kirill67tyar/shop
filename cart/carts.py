@@ -25,7 +25,7 @@ class Cart:
         # тогда встаёт другой вопрос, зачем вообще тогда делать обычную копию?
         # если всё изменение зависит от self.session.modified = True
         # cart = deepcopy(self.cart)
-        product_list = Product.objects.filter(pk__in=cart.keys())
+        product_list = Product.objects.filter(pk__in=cart.keys())  # .select_related('category')
 
         for product in product_list:
             cart[str(product.pk)]['product'] = product

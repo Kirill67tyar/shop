@@ -50,6 +50,7 @@ def remove_from_cart_view(request, product_id):
 def detail_cart_view(request):
     cart = Cart(request=request)
     products = []
+    recommendations = None
     for item in cart:
         item['update_quantity_form'] = AddToCartForm(
             initial={
@@ -66,8 +67,9 @@ def detail_cart_view(request):
         )
     else:
         coupon_apply_form = CouponApplyForm()
-    r = Recommender()
-    recommendations = r.suggest_products_for(products, max_length=4)
+    if products:
+        r = Recommender()
+        recommendations = r.suggest_products_for(products, max_length=4)
     return render(
         request=request,
         template_name='cart/detail.html',
