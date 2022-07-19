@@ -87,5 +87,5 @@ class Recommender:
         """
             полностью очищает рекомендации для всех товаров
         """
-        for product_id in self.get_product_ids(Product.objects.all()):
+        for product_id in Product.objects.values_list('pk', flat=True):
             redis_db.delete(self.get_product_key(product_id))
